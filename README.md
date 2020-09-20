@@ -18,8 +18,11 @@ Data-set contains new articles (documents) for training and testing. The summary
 Steps to execute the code 
 
 $ git clone http://github.com/stanfordnlp/glove
+
 $ cd glove && make
+
 $ ./demo.sh
+
 $ python Generate_Abstractive_Summary.py
 
 
