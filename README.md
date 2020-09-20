@@ -11,11 +11,15 @@ pip install spacy==2.0.12
 python -m spacy download en_core_web_md
 # Dataset link: 
 https://drive.google.com/file/d/1VGthRzHtBSIO182zMCMiqY-YV-D0mLLG/view?usp=sharing
+
 Data-set contains new articles (documents) for training and testing. The summary (or highlight) in the training set is represented as @highlight.
 
 # Case 1: Abstractive Summary
 Steps to execute the code 
 
-python Generate_Abstractive_Summary.py
+$ git clone http://github.com/stanfordnlp/glove
+$ cd glove && make
+$ ./demo.sh
+$ python Generate_Abstractive_Summary.py
 
 
