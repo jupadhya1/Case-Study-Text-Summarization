@@ -37,5 +37,17 @@ $ python Generate_Abstractive_Summary.py
 
 # BERT,GPT-2 & PEGASUS (A State-of-the-Art Model for Abstractive Text Summarization)
 
-To Execute the second method uncomment the code from line no 696 to end.
+bert_model = Summarizer()
+bert_summary = ''.join(bert_model(body, min_length=60))
+print(bert_summary)
+
+
+GPT2_model = TransformerSummarizer(transformer_type="GPT2",transformer_model_key="gpt2-medium")
+full = ''.join(GPT2_model(body, min_length=60))
+print(full)
+
+
+model = TransformerSummarizer(transformer_type="XLNet",transformer_model_key="xlnet-base-cased")
+full = ''.join(model(body, min_length=60))
+print(full)
 
