@@ -35,7 +35,7 @@ $ ./demo.sh
 $ python Generate_Abstractive_Summary.py
 
 
-BERT,GPT-2 & PEGASUS (A State-of-the-Art Model for Abstractive Text Summarization)
+# BERT,GPT-2 & PEGASUS (A State-of-the-Art Model for Abstractive Text Summarization)
 
 To Execute the second method uncomment the code from line no 696 to end.
 
