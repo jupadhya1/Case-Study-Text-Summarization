@@ -2,14 +2,21 @@
  Build a text summarization system to highlight a summary of a given document (news article). The training and testing data set is provided for the same. Generate both extractive as well as abstractive summary separately.  (If not able to implement the abstractive text summarization, please do send the one-page document explaining the approach)
 
 # Prerequiste to execute the code
-pip install --upgrade transformers \n
-pip install bert-extractive-summarizer \n
-pip install spacy==2.1.3 \n
-pip install transformers==2.2.2 \n
-pip install neuralcoref \n
-pip install transformers==2.2.0 \n
-pip install spacy==2.0.12 \n
-python -m spacy download en_core_web_md \n
+pip install --upgrade transformers
+
+pip install bert-extractive-summarizer 
+
+pip install spacy==2.1.3 
+
+pip install transformers==2.2.2 
+
+pip install neuralcoref 
+
+pip install transformers==2.2.0 
+
+pip install spacy==2.0.12 
+
+python -m spacy download en_core_web_md 
 
 # Dataset link: 
 https://drive.google.com/file/d/1VGthRzHtBSIO182zMCMiqY-YV-D0mLLG/view?usp=sharing
