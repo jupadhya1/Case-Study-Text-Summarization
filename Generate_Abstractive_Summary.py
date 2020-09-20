@@ -90,7 +90,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import tensorflow as tf
 
-from pickle import dump,load
+
 
 
 # Commented out IPython magic to ensure Python compatibility.
@@ -105,6 +105,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras import backend as K
 from tensorflow.keras.layers import Layer
 from tensorflow.keras import initializers, regularizers, constraints
+from pickle import dump,load
 
 # %load_ext tensorboard
 import datetime, os
@@ -129,6 +130,53 @@ import zipfile
 with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
     zip_ref.extractall(directory_to_extract_to)
 
+
+
+"""
+Encoder-Decoder with Attention comprised of two sub-models:
+
+Encoder: The encoder is responsible for stepping through the input time steps and encoding the entire sequence into a fixed length vector called a context vector.
+Decoder: The decoder is responsible for stepping through the output time steps while reading from the context vector.
+
+Let E = encoder be the encoder's output tensor of shape (-1, INPUT_LENGTH,64), and let E[i] (encoder[:,i,:]) be the encoder's output vector (of shape (-1, 64)) for i-th English character. This is source-side information (H-s in the paper).
+
+Let D = decoder be the decoder's output tensor of shape (-1, OUTPUT_LENGTH,64), and let D[j] (decoder[:,j,:]) be the decoder's output vector (of shape (-1, 64)) for j-th Katakana character. This is target-side information (H-t in the paper).
+
+Let O = output be the final Katakana output of shape (-1, OUTPUT_LENGTH, output_dict_size). and let O[j] (output[:,j,:]) be the output (probability distribution of shape (-1, output_dict_size)) of j-th Katakana character.
+"""
+class seq_seq_attention(Layer):
+    def __init__(self,**kwargs):
+        super(seq_seq_attention,self).__init__(**kwargs)
+
+    def build(self,input_shape):
+        """
+        Matrices for creating the context vector
+        """
+        self.W=self.add_weight(shape=(input_shape[-1],1),initializer="normal", name="att_weight")
+        self.b=self.add_weight(shape=(input_shape[1],1),initializer="zeros",name="att_bias")        
+        super(seq_seq_attention, self).build(input_shape)
+
+    def call(self,x):
+        """
+        Function which does the computation and is passed through a softmax layer to calculate the attention probabilities and context vector.
+        """
+        et=K.squeeze(K.tanh(K.dot(x,self.W)+self.b),axis=-1)
+        at=K.softmax(et)
+        at=K.expand_dims(at,axis=-1)
+        output=x*at
+        return K.sum(output,axis=1)
+
+    def get_out_shape_tf(self,input_shape):
+        """
+        For Keras internal compatibility checking.
+        """
+        return (input_shape[0],input_shape[-1])
+
+    def get_config(self):
+        """
+        The get_config() method collects the input shape and other information about the model.
+        """
+        return super(seq_seq_attention,self).get_config()
 
 def read_documents(filename):
     '''
@@ -423,51 +471,7 @@ embedding_layer = Embedding(vocab_size,
 
 
 
-"""
-Encoder-Decoder with Attention comprised of two sub-models:
 
-Encoder: The encoder is responsible for stepping through the input time steps and encoding the entire sequence into a fixed length vector called a context vector.
-Decoder: The decoder is responsible for stepping through the output time steps while reading from the context vector.
-
-Let E = encoder be the encoder's output tensor of shape (-1, INPUT_LENGTH,64), and let E[i] (encoder[:,i,:]) be the encoder's output vector (of shape (-1, 64)) for i-th English character. This is source-side information (H-s in the paper).
-
-Let D = decoder be the decoder's output tensor of shape (-1, OUTPUT_LENGTH,64), and let D[j] (decoder[:,j,:]) be the decoder's output vector (of shape (-1, 64)) for j-th Katakana character. This is target-side information (H-t in the paper).
-
-Let O = output be the final Katakana output of shape (-1, OUTPUT_LENGTH, output_dict_size). and let O[j] (output[:,j,:]) be the output (probability distribution of shape (-1, output_dict_size)) of j-th Katakana character.
-"""
-class seq_seq_attention(Layer):
-    def __init__(self,**kwargs):
-        super(seq_seq_attention,self).__init__(**kwargs)
-
-    def build(self,input_shape):
-        """
-        Matrices for creating the context vector
-        """
-        self.W=self.add_weight(shape=(input_shape[-1],1),initializer="normal", name="att_weight")
-        self.b=self.add_weight(shape=(input_shape[1],1),initializer="zeros",name="att_bias")        
-        super(seq_seq_attention, self).build(input_shape)
-
-    def call(self,x):
-        """
-        Function which does the computation and is passed through a softmax layer to calculate the attention probabilities and context vector.
-        """
-        et=K.squeeze(K.tanh(K.dot(x,self.W)+self.b),axis=-1)
-        at=K.softmax(et)
-        at=K.expand_dims(at,axis=-1)
-        output=x*at
-        return K.sum(output,axis=1)
-
-    def get_out_shape_tf(self,input_shape):
-        """
-        For Keras internal compatibility checking.
-        """
-        return (input_shape[0],input_shape[-1])
-
-    def get_config(self):
-        """
-        The get_config() method collects the input shape and other information about the model.
-        """
-        return super(seq_seq_attention,self).get_config()
 
 
 """
