@@ -19,7 +19,6 @@ First, you'll need to enable GPUs for the notebook:
 
 Next, we'll confirm that we can connect to the GPU with tensorflow:
 """
-
 # Commented out IPython magic to ensure Python compatibility.
 # %tensorflow_version 2.x
 import tensorflow as tf
@@ -83,14 +82,15 @@ import os
 work_dir = os.getcwd()
 print("The working directory is :", work_dir)
 
+
 ## Importing the necessary modules in current namespace
 import os, sys, string
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import tensorflow as tf
-
-
+import datetime, os
+import zipfile
 
 
 # Commented out IPython magic to ensure Python compatibility.
@@ -108,32 +108,31 @@ from tensorflow.keras import initializers, regularizers, constraints
 from pickle import dump,load
 
 # %load_ext tensorboard
-import datetime, os
 
 ## Variables initialization
-NO_SAMP      = 10000 # number of samples from the original data.
+NO_SAMP       = 10000 # number of samples from the original data.
 SIZE_VOCAB    = 50000 # max vocabulary size
-DIM_EMBEDDED    = 300   # embedding dimension from the embedding matrix glove
-DIM_LATENT       = 128   # latent dimentionality of the encoding space
+DIM_EMBEDDED  = 300   # embedding dimension from the embedding matrix glove
+DIM_LATENT    = 128   # latent dimentionality of the encoding space
 
-SIZE_BATCH       = 64    # batch size for each training pass
-NO_OF_EPOCS           = 50     # number of epochs to be trained
+SIZE_BATCH    = 64             # batch size for each training pass
+NO_OF_EPOCS   = 50             # number of epochs to be trained
 VALIDATION_SPLIT_RATIO = 0.2   # propertion of the validation sample
 
 text_container         = []  # placeholder to save in input text (Story)
-target_container        = []  # placeholder to save in target text (Summary)
+target_container       = []  # placeholder to save in target text (Summary)
 tt_container = []  # placeholder to save in target text offset by 1 (Summary)
 path_to_zip_file = '/content/drive/My Drive/dataset.zip'
 directory_to_extract_to = '/content/sample_data'
 
-import zipfile
+# Extract the dataset from google drive folder
 with zipfile.ZipFile(path_to_zip_file, 'r') as zip_ref:
     zip_ref.extractall(directory_to_extract_to)
-
-
-
+    
+    
+    
 """
-Encoder-Decoder with Attention comprised of two sub-models:
+Encoder-Decoder Class with Attention comprised of two sub-models:
 
 Encoder: The encoder is responsible for stepping through the input time steps and encoding the entire sequence into a fixed length vector called a context vector.
 Decoder: The decoder is responsible for stepping through the output time steps while reading from the context vector.
@@ -177,8 +176,11 @@ class seq_seq_attention(Layer):
         The get_config() method collects the input shape and other information about the model.
         """
         return super(seq_seq_attention,self).get_config()
-
-def read_documents(filename):
+        
+        
+ # Methods 
+ 
+ def read_documents(filename):
     '''
     Function to read the document using a loop
     input: file name
@@ -220,18 +222,8 @@ def loadStory(o_dir):
         if iter_doc == NO_SAMP:
             break
     return num_stories
-
-# load num_stories
-# /content/sample_data/dataset
-o_dir = os.path.join(work_dir, 'sample_data/dataset', 'stories_text_summarization_dataset_train') 
-num_stories = loadStory(o_dir)
-print('Loaded Stories %d' % len(num_stories))
-
-print(num_stories[0])
-
-
-
-def data_preprocessing(lines):
+    
+ def data_preprocessing(lines):
     cln_txt = list()
     punctuation_table = str.maketrans('', '', string.punctuation)
     for line in lines:
@@ -249,6 +241,15 @@ def data_preprocessing(lines):
         ## remove empty strings
         cln_txt = [c for c in cln_txt if len(c) > 0]
     return cln_txt
+
+# load num_stories
+# /content/sample_data/dataset
+o_dir = os.path.join(work_dir, 'sample_data/dataset', 'stories_text_summarization_dataset_train') 
+num_stories = loadStory(o_dir)
+print('Loaded Stories %d' % len(num_stories))
+
+print(num_stories[0])
+
 
 # clean num_stories
 stories_cleaned = list()
@@ -698,7 +699,7 @@ while True:
         
 
 """
-Method-2 
+# Method-2 
 pip install --upgrade transformers
 pip install bert-extractive-summarizer
 pip install spacy==2.1.3
@@ -772,5 +773,4 @@ print(full)
 model = TransformerSummarizer(transformer_type="XLNet",transformer_model_key="xlnet-base-cased")
 full = ''.join(model(body, min_length=60))
 print(full)
-
 """
