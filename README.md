@@ -51,3 +51,26 @@ model = TransformerSummarizer(transformer_type="XLNet",transformer_model_key="xl
 full = ''.join(model(body, min_length=60))
 print(full)
 
+
+# Case 2: Extractive Summary
+Steps to execute the code
+
+python Generate_Extractive_Summary.py
+"""
+- Graph based algorithm
+
+Basic steps
+- Cleaning Text (remove punctuation, Stopwords, stemming)
+- Vector representation of sentences: **This part can be customized by using different pre-trained vectorization models or train your own model**
+- Use cosine similarity find similarity of sentences
+- Apply PageRank algorithm: use networkx(networkx.score) to rank sentences
+- Extract top N sentences as summary
+
+Skip implementation, there are >3 existing packages using graph
+
+### 4.1 Gensim summarizer
+https://github.com/RaRe-Technologies/gensim/tree/develop/gensim/summarization
+
+### 4.2 Pytextrank package
+https://github.com/DerwenAI/pytextrank/blob/master/explain_summ.ipynb
+"""
