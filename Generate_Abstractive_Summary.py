@@ -180,7 +180,7 @@ class seq_seq_attention(Layer):
         
  # Methods 
  
- def read_documents(filename):
+def read_documents(filename):
     '''
     Function to read the document using a loop
     input: file name
@@ -223,7 +223,7 @@ def loadStory(o_dir):
             break
     return num_stories
     
- def data_preprocessing(lines):
+def data_preprocessing(lines):
     cln_txt = list()
     punctuation_table = str.maketrans('', '', string.punctuation)
     for line in lines:
@@ -699,7 +699,7 @@ while True:
         
 
 """
-# Method-2 
+Method-2 
 pip install --upgrade transformers
 pip install bert-extractive-summarizer
 pip install spacy==2.1.3
@@ -773,4 +773,10 @@ print(full)
 model = TransformerSummarizer(transformer_type="XLNet",transformer_model_key="xlnet-base-cased")
 full = ''.join(model(body, min_length=60))
 print(full)
+
 """
+
+
+    
+    
+    
