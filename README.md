@@ -56,7 +56,7 @@ print(full)
 Steps to execute the code
 
 python Generate_Extractive_Summary.py
-"""
+
 - Graph based algorithm
 
 Basic steps
@@ -73,4 +73,4 @@ https://github.com/RaRe-Technologies/gensim/tree/develop/gensim/summarization
 
 ### 4.2 Pytextrank package
 https://github.com/DerwenAI/pytextrank/blob/master/explain_summ.ipynb
-"""
+
