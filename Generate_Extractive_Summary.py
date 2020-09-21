@@ -90,10 +90,10 @@ for fptr in file_list:
 
 Basic steps
 - Cleaning Text (remove punctuation, Stopwords, stemming)
-- Vector representation of sentences: **This part can be customized by using different pre-trained vectorization models or train your own model**
+- Vector representation of sentences: **This part can be customized by using different pre-trained vectorization models or train your own tf_model**
 - Use cosine similarity find similarity of sentences
 - Apply PageRank algorithm: use networkx(networkx.score) to rank sentences
-- Extract top N sentences as summary
+- Extract top N sentences as extractive_summary
 
 Skip implementation, there are >3 existing packages using graph
 
@@ -147,11 +147,11 @@ for sent in X_data:
   X_sent_words.append(sent_word_list)
 print(X_sent_words[:5])
 
-## training word2vec model to create word embeddings
-model = Word2Vec(X_sent_words, min_count=1)
+## training word2vec tf_model to create word embeddings
+tf_model = Word2Vec(X_sent_words, min_count=1)
 
-## saving the model
-model.wv.save_word2vec_format('word_embeddings.bin')
+## saving the tf_model
+tf_model.wv.save_word2vec_format('word_emb.bin')
 
 # Generating Summary for a test files
 X_test = []
@@ -184,7 +184,7 @@ def generate_summary(content, num_sentences):
   sentence_vectors = []
   for i in sentence_token:
     if len(i)!=0:
-      v = sum([model[w] for w in i.split()])/(len(i.split())+0.001)
+      v = sum([tf_model[w] for w in i.split()])/(len(i.split())+0.001)
     else:
       v = np.zeros((100,))
     sentence_vectors.append(v)
@@ -204,17 +204,17 @@ def generate_summary(content, num_sentences):
   
   ranked_sentences = sorted(((scores[i],s) for i,s in enumerate(sentences)), reverse=True)
   
-  # Generate summary
-  summary=[]
+  # Generate extractive_summary
+  extractive_summary=[]
   for i in range(num_sentences):
-    summary.append(ranked_sentences[i][1])
+    extractive_summary.append(ranked_sentences[i][1])
   
-  return summary
+  return extractive_summary
 
 print(X_test[0])
 print('')
 print('Summary')
 
-summary = generate_summary(X_test[0],5)
-for sent in summary:
+extractive_summary = generate_summary(X_test[0],5)
+for sent in extractive_summary:
   print(sent)
