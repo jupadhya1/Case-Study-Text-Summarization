@@ -773,10 +773,4 @@ print(full)
 model = TransformerSummarizer(transformer_type="XLNet",transformer_model_key="xlnet-base-cased")
 full = ''.join(model(body, min_length=60))
 print(full)
-
 """
-
-
-    
-    
-    
