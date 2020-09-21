@@ -103,26 +103,6 @@ https://github.com/RaRe-Technologies/gensim/tree/develop/gensim/summarization
 ### 4.2 Pytextrank package
 https://github.com/DerwenAI/pytextrank/blob/master/explain_summ.ipynb
 """
-def remove_punctuations(sent):
-  """ To remove punctuations and special characters """
-  cleaned=re.sub(r'[?|!|\'|"|#]', r'', sent)
-  cleaned=re.sub(r'[.|,|)|(|\|/]', r' ', sent)
-  cleaned=cleaned.strip()
-  cleaned=cleaned.replace('\n',' ')
-  return cleaned
- 
-def remove_non_alphanumeric(sent):
-  """ To remove non-alphabetic characters """
-  alpha_sent=''
-  for word in sent.split():
-    alpha_word=re.sub('[^a-z A-Z]+', ' ', word)
-    alpha_sent+=alpha_word
-    alpha_sent+=' '
-  alpha_sent=alpha_sent.strip()
-  return alpha_sent
-
-X_data = [remove_punctuations(sent) for sent in X_text]
-X_data = [remove_non_alphanumeric(sent) for sent in X_data]
 X_data = [sent.lower() for sent in X_data]
 
 nltk.download('stopwords')
